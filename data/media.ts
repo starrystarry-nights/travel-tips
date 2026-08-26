@@ -38,7 +38,7 @@ function asset(
 }
 
 export const media: MediaAsset[] = [
-  asset("urumqi-city-01", "/media/urumqi/u-00.webp", "乌鲁木齐城市街头与行人", "urumqi", "people", ["home-hero"], true),
+  asset("urumqi-city-01", "/media/urumqi/u-00-new.jpg", "年轻女孩在城市街头自然停留的旅行画面", "urumqi", "people", ["home-hero", "day01-hero"], true),
   asset("urumqi-night-01", "/media/urumqi/u-01.webp", "乌鲁木齐夜晚灯光与城市倒影", "urumqi", "landscape", ["day01-gallery"]),
   asset("urumqi-architecture-01", "/media/urumqi/u-02.webp", "乌鲁木齐现代建筑切面", "urumqi", "landscape", ["day01-gallery"]),
   asset("urumqi-market-01", "/media/urumqi/u-03.webp", "乌鲁木齐市场织物与干果细节", "urumqi", "detail", ["day01-gallery"]),
