@@ -18,4 +18,6 @@ export const dayVisuals: Record<number, DayVisual> = {
   6:{hero:"devil-yardang-01",secondary:"poplar-forest-01",outfit:"style-gobi-04",altitude:"约 300—500 m",outfitCopy:"长袖 + 防风外层 + 宽松长裤",outfitNote:"魔鬼城风、晒和干燥明显；帽子与围巾要能固定。",dayBag:[...common,["sun","防晒 / 墨镜 / 帽子","required"],["shell","轻量防风外层","recommended"],["lip","润唇膏","recommended"],["tissue","纸巾 / 湿巾","recommended"]]},
   7:{hero:"urumqi-window-01",secondary:"urumqi-city-01",outfit:"style-city-02",altitude:"约 800 m",outfitCopy:"舒适长袖 + 轻外套 + 好走的鞋",outfitNote:"以长时间交通和室内外温差为准。",dayBag:[...common,["ticket","返程交通信息","required"],["meds","个人常用药","recommended"]]},
 };
-export const visualFor = (day: TripDay) => dayVisuals[day.day];
+export function visualFor(day: TripDay): DayVisual {
+  return dayVisuals[day.day];
+}
