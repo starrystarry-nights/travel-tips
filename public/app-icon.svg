@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="92" fill="#f2efe7"/>
-  <path d="M66 350 178 174l62 92 60-78 146 162H66Z" fill="#6f7d6a"/>
-  <path d="m178 174 31 47 23-24 68 91 34-38 112 100H66l112-176Z" fill="#315f75" fill-opacity=".55"/>
-  <circle cx="370" cy="136" r="38" fill="#a47a58" fill-opacity=".7"/>
-  <text x="70" y="430" font-family="Arial, sans-serif" font-size="48" letter-spacing="9" fill="#252b29">XINJIANG</text>
-</svg>
