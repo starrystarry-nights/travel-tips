@@ -2,12 +2,12 @@
   "name": "THE XINJIANG EDIT",
   "short_name": "XINJIANG EDIT",
   "description": "北疆秋日旅行指南",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "display": "standalone",
-  "background_color": "#f3f3ed",
-  "theme_color": "#20251f",
+  "background_color": "#f3efe6",
+  "theme_color": "#edf1ed",
   "lang": "zh-CN",
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
