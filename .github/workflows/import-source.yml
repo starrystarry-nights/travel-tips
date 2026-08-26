@@ -3,22 +3,22 @@ name: One-time source import
 on:
   push:
     paths:
-      - source-mirror.part-*
+      - source-mirror.b64-*.txt
 
 permissions:
   contents: write
 
 jobs:
   import:
-    if: ${{ hashFiles('source-mirror.part-03') != '' }}
+    if: ${{ hashFiles('source-mirror.b64-07.txt') != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Expand verified source archive
         run: |
-          cat source-mirror.part-* > source-mirror.zip
+          cat source-mirror.b64-*.txt | base64 -d > source-mirror.zip
           unzip -o source-mirror.zip
-          rm source-mirror.zip source-mirror.part-*
+          rm source-mirror.zip source-mirror.b64-*.txt
           rm -f .github/workflows/import-source.yml
       - name: Commit source and remove importer
         run: |
