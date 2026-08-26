@@ -17,9 +17,8 @@ export const metadata: Metadata = {
     images: ["/og.png"],
   },
   icons: {
-    icon: "/app-icon.svg",
+    icon: "/favicon.svg",
     shortcut: "/favicon.svg",
-    apple: "/app-icon.svg",
   },
   manifest: "/manifest.webmanifest",
 };
@@ -32,8 +31,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <head>
-        <meta name="theme-color" content="#f2efe7" />
-        <meta name="apple-mobile-web-app-title" content="XINJIANG EDIT" />
+        <meta name="theme-color" content="#ffffff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
