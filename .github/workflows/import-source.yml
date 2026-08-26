@@ -4,13 +4,14 @@ on:
   push:
     paths:
       - source-mirror.b64-*.txt
+      - source-mirror.ready
 
 permissions:
   contents: write
 
 jobs:
   import:
-    if: ${{ hashFiles('source-mirror.b64-07.txt') != '' }}
+    if: ${{ hashFiles('source-mirror.ready') != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +19,7 @@ jobs:
         run: |
           cat source-mirror.b64-*.txt | base64 -d > source-mirror.zip
           unzip -o source-mirror.zip
-          rm source-mirror.zip source-mirror.b64-*.txt
+          rm source-mirror.zip source-mirror.b64-*.txt source-mirror.ready
           rm -f .github/workflows/import-source.yml
       - name: Commit source and remove importer
         run: |
