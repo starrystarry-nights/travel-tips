@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#edf1ed"/>
+  <path d="M0 356 130 218l64 72 78-119 240 257v84H0Z" fill="#697c6c"/>
+  <path d="M0 392 156 286l74 61 74-89 208 165v89H0Z" fill="#7b514f" opacity=".72"/>
+  <text x="44" y="96" font-family="Arial,Helvetica,sans-serif" font-size="39" letter-spacing="8" fill="#252b29">XINJIANG</text>
+  <text x="46" y="145" font-family="Arial,Helvetica,sans-serif" font-size="22" letter-spacing="13" fill="#252b29">EDIT</text>
+</svg>
