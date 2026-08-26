@@ -3,7 +3,6 @@ name: One-time source import
 on:
   push:
     paths:
-      - source-mirror.b64-*.txt
       - source-mirror.ready
 
 permissions:
@@ -11,7 +10,6 @@ permissions:
 
 jobs:
   import:
-    if: ${{ hashFiles('source-mirror.ready') != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
