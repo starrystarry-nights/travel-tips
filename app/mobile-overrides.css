@@ -1,0 +1,2 @@
+.app-shell.qa-mobile { margin-inline: auto; }
+.app-shell.qa-mobile .basic-nav { width: inherit; left: 50%; right: auto; bottom: max(0px, calc(100vh - 844px)); transform: translateX(-50%); }

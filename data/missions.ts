@@ -1,0 +1,1 @@
+export const missions=["Take a photo when the other person isn’t looking.","Find the best leaf.","Buy one unfamiliar snack.","Sit somewhere for ten minutes.","Take one deliberately imperfect photo.","Record ten seconds of ambient sound.","Find today’s best light.","Take one photo together before leaving."];

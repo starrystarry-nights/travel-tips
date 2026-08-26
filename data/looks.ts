@@ -1,0 +1,8 @@
+export const looks=[
+{name:"CITY",image:"/forest.png",palette:["BLACK","GREY","SILVER","BURGUNDY"],silhouette:"Structured outerwear · straight line · precise shoe",texture:"Wool · metal · smooth leather",idea:"One silver detail catches city light.",avoid:"Too many competing statement pieces."},
+{name:"DESERT",image:"/desert.png",palette:["WHITE","DENIM","CHARCOAL","RED"],silhouette:"Wide trouser · sharp jacket · moving scarf",texture:"Crisp cotton · washed denim",idea:"Use contrast so the person does not disappear into sand.",avoid:"Head-to-toe desert khaki."},
+{name:"FOREST",image:"/forest.png",palette:["CHARCOAL","CREAM","BURGUNDY","BROWN"],silhouette:"Oversized knit · long skirt · boots · long coat",texture:"Brushed knit · suede · heavy wool",idea:"Soft volume against vertical birch trunks.",avoid:"Head-to-toe mustard or camel; it merges with autumn."},
+{name:"LAKE",image:"/hero.png",palette:["CREAM","MOSS","GREY","BLACK"],silhouette:"Long clean layer · grounded boots",texture:"Knit · windproof shell · wool",idea:"Technical jacket × feminine or tailored line.",avoid:"A complete matching outdoor uniform."},
+{name:"VILLAGE",image:"/forest.png",palette:["CREAM","DARK BROWN","MOSS","BURGUNDY"],silhouette:"Relaxed layers · long hem · practical boot",texture:"Cable knit · corduroy · aged leather",idea:"Dress for smoke, timber and cold air—not a costume.",avoid:"Over-themed pastoral styling."},
+{name:"GOBI",image:"/desert.png",palette:["BLACK","WHITE","RUST","SILVER"],silhouette:"Strong shoulder · narrow profile · wind movement",texture:"Leather · washed cotton · metal",idea:"Let one piece move against the still land.",avoid:"Tiny fussy detail that disappears in wide shots."}
+];

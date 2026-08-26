@@ -1,0 +1,16 @@
+{
+  "name": "THE XINJIANG EDIT",
+  "short_name": "XINJIANG EDIT",
+  "description": "北疆秋日旅行指南",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2efe7",
+  "theme_color": "#f2efe7",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "categories": ["travel", "lifestyle"],
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
