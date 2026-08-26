@@ -6,8 +6,6 @@ import { mediaById, validateMediaLibrary } from "@/data/media";
 import { days, packLayers, photoReferences, places, preparations, styleReferences, tripStart, type Freshness, type Preparation, type Stage, type TripDay } from "@/data/product";
 import { AppShell, ImageFrame } from "./primitives";
 import { TripPrototype } from "./trip-prototype";
-import { visualFor } from "@/data/experience";
-import { BottomNav as JournalBottomNav, ChecklistPreview, DayHero, EditorialSection, ExpandedChecklistPage, ExpandedOutfitPage, InfoRail, LandscapePhotoBlock, MapSheet, OutfitPreview, Timeline } from "./day-components";
 
 type View = "home" | "trip" | "map" | "inspire" | "pack";
 type PackLayer = keyof typeof packLayers;
@@ -43,18 +41,6 @@ function prepActive(item: Preparation, now: Date, state: ReturnType<typeof getDa
   return item.window === "48h" ? diff <= 2 && diff >= 0 : item.window === "day-before" ? diff <= 1 && diff >= 0 : false;
 }
 
-async function shareSite() {
-  const payload = { title: "THE XINJIANG EDIT", text: "北疆秋日旅行指南｜7 日路线、天气、穿搭与随身清单", url: location.origin };
-  try {
-    if (navigator.share) await navigator.share(payload);
-    else { await navigator.clipboard.writeText(payload.url); window.alert("链接已复制"); }
-  } catch (error) {
-    if ((error as Error)?.name !== "AbortError") { await navigator.clipboard.writeText(payload.url); window.alert("链接已复制"); }
-  }
-}
-
-async function copyLink() { await navigator.clipboard.writeText(location.origin); window.alert("链接已复制"); }
-
 function FreshnessBadge({ type }: { type: Freshness }) { return <span className={`freshness ${type}`}>{type === "stable" ? "稳定信息" : type === "before" ? "出发前确认" : "当天确认"}</span>; }
 function Topbar({ title, back }: { title?: string; back?: () => void }) { return <header className="topbar">{back ? <button onClick={back} aria-label="返回">←</button> : <span className="brand-mark">XE</span>}<div><b>{title || "THE XINJIANG EDIT"}</b><small>北疆秋日旅行指南</small></div><time>12—18 SEP</time></header>; }
 function BottomNav({ view, change }: { view: View; change: (v: View) => void }) { return <nav className="basic-nav" aria-label="主要导航">{nav.map(item => <button key={item.id} aria-current={view === item.id ? "page" : undefined} onClick={() => change(item.id)}>{item.label}</button>)}</nav>; }
@@ -70,15 +56,19 @@ const helperCategories = [
 ] as const;
 
 function Home({ openDay, goPack, goMap }: { openDay: (n: number) => void; goPack: (l: PackLayer) => void; goMap: (n: number) => void }) {
-  const state = getDateState(), { value: packed } = useStoredRecord("xe-packing-v2"), { value: prep } = useStoredRecord("xe-preparation-v1");
-  const allItems = helperCategories.flatMap(category => category.items), packedCount = allItems.filter(([id]) => packed[id]).length;
-  const currentDay = state.mode === "during" ? days[(state.currentDay ?? 1) - 1] : days[0], pending = preparations.filter(item => !prep[item.id] && prepActive(item, new Date(), state));
-  return <main className="journal-home">
-    <header className="home-floating"><span>THE XINJIANG EDIT</span><div><button onClick={copyLink}>复制链接</button><button onClick={shareSite}>分享 ↗</button></div></header>
-    <section className="home-scene"><LandscapePhotoBlock source={visualFor(currentDay).hero} priority /><div className="home-scene-copy"><small>{state.mode === "before" ? "BEFORE THE TRIP" : state.mode === "during" ? `TODAY · DAY ${String(currentDay.day).padStart(2, "0")}` : "THE JOURNEY"}</small><h1>{state.mode === "before" ? `${state.daysToGo} 天后出发` : currentDay.route.join(" → ")}</h1><p>12—18 SEP 2026 · 北疆秋日旅行指南</p></div></section>
-    <section className="home-actions"><button onClick={() => openDay(currentDay.day)}><small>{state.mode === "before" ? "最近关键日" : "打开今天"}</small><b>{currentDay.route.join(" → ")}</b><span>{currentDay.drive || "自由活动"}　→</span></button><button onClick={() => goPack("day")}><small>准备进度</small><b>{packedCount} / {allItems.length}</b><span>继续整理 →</span></button>{pending[0] && <button onClick={() => openDay(pending[0].day || currentDay.day)}><small>待确认</small><b>{pending[0].title}</b><span>{pending.length} 项未完成 →</span></button>}</section>
-    <EditorialSection eyebrow="THE JOURNEY" title="七天，五天跟团行程"><div className="home-day-strip">{days.map(day => <button key={day.day} onClick={() => openDay(day.day)}><LandscapePhotoBlock source={visualFor(day).secondary} /><small>0{day.day} · {day.date}</small><b>{day.route.at(-1)}</b></button>)}</div></EditorialSection>
-    <button className="home-map-link" onClick={() => goMap(currentDay.day)}><span>查看完整路线</span><b>MAP ↗</b></button>
+  const now = useMemo(() => new Date(), []), state = getDateState(now); const { value: packed, toggle } = useStoredRecord("xe-packing-v2"); const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const allItems = helperCategories.flatMap(category => category.items); const packedCount = allItems.filter(([id]) => packed[id]).length; const currentDay = state.mode === "during" ? days[(state.currentDay ?? 1) - 1] : days[0];
+  const resetPacking = () => { if (window.confirm("确定要重置所有勾选状态吗？")) { localStorage.setItem("xe-packing-v2", "{}"); location.reload(); } };
+  return <main className="screen helper-home">
+    <header className="helper-header"><span className="helper-mountain" aria-hidden="true">⌁</span><div><h1>北疆旅行小助手</h1><p>9月12日出发 · 打包清单与行前提醒</p></div></header>
+    <section className="helper-countdown" aria-label="旅行倒计时"><strong>{state.mode === "before" ? state.daysToGo : state.mode === "during" ? `D${currentDay.day}` : "✓"}</strong><span>{state.mode === "before" ? "天后出发" : state.mode === "during" ? currentDay.route.join(" → ") : "行程已结束"}</span><small>目标日期：2026年9月12日</small></section>
+    <section className="helper-weather" aria-label="九月北疆气候参考"><div><b>20–25℃</b><span>白天常见</span></div><div><b>&lt;10℃</b><span>山区夜间</span></div><div><b>大</b><span>昼夜温差</span></div></section>
+    <section className="helper-trip-link"><button onClick={() => openDay(currentDay.day)}><span><small>{state.mode === "during" ? `DAY ${String(currentDay.day).padStart(2, "0")}` : "7 DAY ROUTE"}</small><b>{state.mode === "during" ? currentDay.route.join(" → ") : "查看完整行程"}</b></span><i>→</i></button><button onClick={() => goMap(3)} aria-label="查看路线地图">地图</button></section>
+    <section className="helper-packing"><header><div><h2>打包清单</h2><span>{packedCount}/{allItems.length}</span></div><div className="helper-progress"><i style={{ width: `${allItems.length ? packedCount / allItems.length * 100 : 0}%` }} /></div></header>
+      <div className="helper-categories">{helperCategories.map(category => { const done = category.items.filter(([id]) => packed[id]).length; const isCollapsed = collapsed[category.id]; return <section className={`helper-category ${isCollapsed ? "collapsed" : ""}`} key={category.id}><button className="helper-category-head" onClick={() => setCollapsed(old => ({ ...old, [category.id]: !old[category.id] }))} aria-expanded={!isCollapsed}><span><i>{category.icon}</i><b>{category.title}</b></span><span>{done}/{category.items.length} <em>⌄</em></span></button>{!isCollapsed && <div>{category.items.map(([id, label, note]) => <button className={`helper-check ${packed[id] ? "checked" : ""}`} key={id} onClick={() => toggle(id)}><i>{packed[id] ? "✓" : ""}</i><span>{label}</span>{note && <small>{note}</small>}</button>)}</div>}</section>; })}</div>
+    </section>
+    <section className="helper-tips"><h2>行前小提示</h2><ul><li>北疆昼夜温差大，防风外层和轻保暖层都需要。</li><li>喀纳斯、禾木、白哈巴早晚更冷，厚外套不要放进不便取用的大件行李。</li><li>紫外线强，防晒霜、墨镜和帽子随身。</li><li>Day 02、05、06 车程较长，水、零食、纸巾和充电宝放身边。</li><li>出发前一周再看天气；道路、预约和景区状态按提示确认。</li></ul></section>
+    <section className="helper-actions"><button onClick={() => goPack("day")}>检查 Day 03 当天随身</button><button onClick={resetPacking}>重置清单</button></section>
   </main>;
 }
 
@@ -176,19 +166,7 @@ function JournalDayThree({ close, goMap, goPack, goInspire }: { close: () => voi
 }
 
 function DayWorkspace({ dayNumber, close, goMap, goPack, goInspire }: { dayNumber: number; close: () => void; goMap: (n: number, place?: string) => void; goPack: (l: PackLayer) => void; goInspire: () => void }) {
-  const day = days[dayNumber - 1], visual = visualFor(day), prep = useStoredRecord("xe-preparation-v1"), packing = useStoredRecord(`xe-daybag-${day.day}`), [layer, setLayer] = useState<"main" | "map" | "outfit" | "checklist">("main"), [stage, setStage] = useState<Stage | null>(null);
-  if (dayNumber === 3) return <JournalDayThree close={close} goMap={goMap} goPack={goPack} goInspire={goInspire} />;
-  if (layer === "checklist") return <ExpandedChecklistPage day={day} visual={visual} values={packing.value} toggle={packing.toggle} back={() => setLayer("main")} />;
-  if (layer === "outfit") return <ExpandedOutfitPage day={day} visual={visual} back={() => setLayer("main")} />;
-  return <main className={`journal-day journal-day-${day.day}`}>
-    <DayHero day={day} visual={visual} close={close} weather={<Weather day={day} variant="rail" />} />
-    <InfoRail day={day} visual={visual} openMap={() => setLayer("map")} openConfirm={() => setStage(day.stages.find(s => s.taskIds?.length) || day.stages[0])} confirmLabel={preparations.find(item => item.day === day.day && item.freshness !== "stable")?.title} />
-    <EditorialSection eyebrow="ITINERARY" title="今天行程"><Timeline stages={day.stages} openStage={setStage} /></EditorialSection>
-    <OutfitPreview visual={visual} open={() => setLayer("outfit")} />
-    <ChecklistPreview items={visual.dayBag} values={packing.value} open={() => setLayer("checklist")} />
-    {layer === "map" && <MapSheet day={day} close={() => setLayer("main")} openFull={() => goMap(day.day)} />}
-    {stage && <div className="journal-overlay" onClick={() => setStage(null)}><section className="journal-sheet stage-sheet" onClick={e => e.stopPropagation()}><header><small>{stage.kind.toUpperCase()}</small><button onClick={() => setStage(null)}>×</button></header><h2>{stage.title}</h2>{stage.meta && <p>{stage.meta}</p>}{stage.facts?.map(fact => <p key={fact}>{fact}</p>)}{stage.taskIds?.map(id => { const item = preparations.find(p => p.id === id); return item ? <button key={id} className={prep.value[id] ? "checked" : ""} onClick={() => prep.toggle(id)}><FreshnessBadge type={item.freshness} /> {item.title} {prep.value[id] ? "✓" : ""}</button> : null; })}</section></div>}
-  </main>;
+  const day = days[dayNumber - 1], { value, toggle } = useStoredRecord("xe-preparation-v1"); if (dayNumber === 3) return <JournalDayThree close={close} goMap={goMap} goPack={goPack} goInspire={goInspire} />; return <main className={`day-workspace day-${day.day}`}><Topbar title={`DAY ${String(day.day).padStart(2, "0")}`} back={close} /><header className="day-overview"><div><time>{day.date}</time><h1>{day.route.join(" → ")}</h1><p>{[day.distance, day.drive, `住 ${day.sleep}`].filter(Boolean).join(" · ")}</p></div><button onClick={() => goMap(day.day)}>地图</button></header><Weather day={day} /><section className="stage-flow">{day.stages.map(stage => <StageBlock key={stage.id} stage={stage} prepDone={value} togglePrep={toggle} goMap={place => goMap(day.day, place)} goPack={goPack} goInspire={goInspire} />)}</section></main>;
 }
 
 function RealMap({ selectedDay, selectedPlaceId, selectDay, openDay }: { selectedDay: number; selectedPlaceId?: string; selectDay: (n: number) => void; openDay: (n: number) => void }) {
@@ -201,15 +179,17 @@ function RealMap({ selectedDay, selectedPlaceId, selectDay, openDay }: { selecte
 }
 
 function Inspire({ back }: { back: () => void }) {
-  const [mode, setMode] = useState<"style" | "photo">("style"), [selected, setSelected] = useState(3); const selectedDay = days[selected - 1], visual = visualFor(selectedDay);
+  const [mode, setMode] = useState<"style" | "photo">("style");
   return <main className="day3-expanded day3-style-full">
-    <header className="day3-expanded-nav"><button onClick={back}>← 行程</button><span>INSPIRE</span></header>
-    <nav className="inspire-day-rail">{days.map(item => <button key={item.day} className={selected === item.day ? "active" : ""} onClick={() => setSelected(item.day)}>0{item.day}</button>)}</nav>
-    <section className="day3-style-landscape"><LandscapePhotoBlock source={visual.secondary} priority /><div><small>WHAT TO WEAR / {String(selected).padStart(2,"0")}</small><h1>今天怎么穿</h1><p>{selectedDay.route.join(" → ")}</p></div></section>
+    <header className="day3-expanded-nav"><button onClick={back}>← DAY 03</button><span>SEP.14</span></header>
+    <section className="day3-style-landscape"><EditorialPhoto src={dayThreePhotos.road} alt="阿禾公路沿途雪山与秋林环境" priority /><div><small>WHAT TO WEAR / 03</small><h1>今天怎么穿</h1><p>阿禾公路 → 禾木</p></div></section>
     <nav className="day3-inspire-switch" aria-label="灵感类型"><button className={mode === "style" ? "active" : ""} onClick={() => setMode("style")}>穿搭参考</button><button className={mode === "photo" ? "active" : ""} onClick={() => setMode("photo")}>照片参考</button></nav>
     {mode === "style" ? <>
       <div className="day3-style-conditions"><span><small>体感</small>早晚偏冷，风明显</span><span><small>车程</small>约 5 小时</span><span><small>中午</small>有太阳会暖一些</span></div>
-      <div className="day3-outfit-scroll" aria-label="穿搭照片，左右滑动"><figure><LandscapePhotoBlock source={visual.outfit} alt={visual.outfitAlt}/><figcaption><b>{visual.outfitCopy}</b><span>{visual.outfitNote}</span></figcaption></figure><figure><LandscapePhotoBlock source={selected === 3 ? dayThreePhotos.wearTwo : visual.secondary}/><figcaption><b>外层方便穿脱，鞋以当天步行量为准</b><span>{selectedDay.drive ? `${selectedDay.drive} 车程也要考虑坐着舒服。` : "按当天活动量调整。"}</span></figcaption></figure></div>
+      <div className="day3-outfit-scroll" aria-label="Day 03 穿搭照片，左右滑动">
+        <figure><EditorialPhoto src={dayThreePhotos.wearOne} alt="秋季山地防风外套与围巾穿搭参考" /><figcaption><b>防风外套 + 薄针织 + 宽松长下装</b><span>早上穿完整；中午热时脱外层。</span></figcaption></figure>
+        <figure><EditorialPhoto src={dayThreePhotos.wearTwo} alt="秋季山地轻量叠穿与帽子穿搭参考" /><figcaption><b>轻薄长袖 + 针织中层 + 好走的鞋</b><span>进禾木后温度更低，外套别放大箱里。</span></figcaption></figure>
+      </div>
       <p className="day3-swipe-note">SWIPE <i /> 参考图</p>
       <section className="day3-wear-facts"><div><small>上身</small><p>长袖或薄针织；怕冷加薄抓绒。最外层选防风外套或冲锋衣。</p></div><div><small>下身 / 鞋</small><p>约 5 小时坐车，下装不要勒腰。鞋底防滑、走熟优先。</p></div><div><small>配件</small><p>防晒 + 墨镜。风大时，能固定的围巾和帽子更实用。</p></div></section>
     </> : <><div className="day3-photo-board">{photoReferences.map((ref, i) => <figure key={ref.media} className={`photo-${i + 1}`}><Media id={ref.media} sizes="80vw" />{ref.annotation && <figcaption>{ref.annotation}</figcaption>}</figure>)}</div><p className="day3-swipe-note">SWIPE <i /> visual references</p></>}
@@ -217,14 +197,15 @@ function Inspire({ back }: { back: () => void }) {
 }
 
 function Pack({ back }: { back: () => void }) {
-  const [filter, setFilter] = useState<"all" | "open" | "done">("all"); const { value, toggle } = useStoredRecord("xe-packing-v2"), items = helperCategories.flatMap(category => category.items.map(([id,label]) => [id,label,"recommended"] as const)), done = items.filter(([id]) => value[id]).length, visible = items.filter(([id]) => filter === "all" || (filter === "done" ? value[id] : !value[id]));
+  const [filter, setFilter] = useState<"all" | "open" | "done">("all"); const { value, toggle } = useStoredRecord("xe-packing-v2"), items = packLayers.day, done = items.filter(([id]) => value[id]).length, visible = items.filter(([id]) => filter === "all" || (filter === "done" ? value[id] : !value[id]));
   return <main className="day3-expanded day3-pack-full">
-    <header className="day3-expanded-nav"><button onClick={back}>← 行程</button><span>PREP</span></header>
-    <section className="day3-pack-intro"><div><small>BEFORE THE TRIP</small><h1>行前准备</h1><p>北疆 9 月 · 温差、风、干燥与长车程</p></div><strong>{done}<i>/</i>{items.length}</strong><Progress done={done} total={items.length} /></section>
+    <header className="day3-expanded-nav"><button onClick={back}>← DAY 03</button><span>09.14</span></header>
+    <section className="day3-pack-intro"><div><small>DAY 03 · ON YOU</small><h1>当天随身</h1><p>阿勒泰 → 阿禾公路 → 禾木</p></div><strong>{done}<i>/</i>{items.length}</strong><Progress done={done} total={items.length} /></section>
+    <section className="day3-luggage-context"><small>进入禾木前</small><h2>大件行李可能暂时不方便拿取。</h2><p>提前拿出今晚与明早的衣物、洗漱用品、充电和常用药。</p></section>
     <nav className="day3-pack-filter"><button onClick={() => setFilter("all")} className={filter === "all" ? "active" : ""}>全部</button><button onClick={() => setFilter("open")} className={filter === "open" ? "active" : ""}>未完成</button><button onClick={() => setFilter("done")} className={filter === "done" ? "active" : ""}>已完成</button></nav>
     <section className="day3-pack-list">{visible.map(([id, label, level]) => <button key={id} className={value[id] ? "done" : ""} onClick={() => toggle(id)}><i>{value[id] ? "✓" : ""}</i><span>{label}</span><small>{level === "required" ? "必带" : level === "recommended" ? "建议" : "可选"}</small></button>)}</section>
     <p className="day3-pack-footnote">白天日照仍然明显；进入阿勒泰山区后，早晚温差与风更需要提前准备。</p>
   </main>;
 }
 
-export function Site() { const [view, setView] = useState<View>("home"), [day, setDay] = useState<number | null>(null), [mapDay, setMapDay] = useState(3), [mapPlace, setMapPlace] = useState<string | undefined>(), [qaWidth, setQaWidth] = useState<number | null>(null); useEffect(() => { validateMediaLibrary(); const query = new URLSearchParams(location.search), requestedWidth = Number(query.get("viewport")); setQaWidth([375, 390, 393, 430].includes(requestedWidth) ? requestedWidth : null); if (query.get("proof") === "trip") { setDay(null); setView("trip"); } else if (query.get("home") === "1") { setDay(null); setView("home"); } else if (query.get("detail") === "pack") { setDay(null); setView("pack"); } else if (query.get("detail") === "style") { setDay(null); setView("inspire"); } else if (query.get("day")) { const requestedDay = Number(query.get("day")); if (requestedDay >= 1 && requestedDay <= 7) setDay(requestedDay); } if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {}); }, []); useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }); }, [view, day]); const change = (v: View) => { setDay(null); setView(v); }, goPack = (_l: PackLayer) => { setDay(null); setView("pack"); }, goMap = (n: number, place?: string) => { setMapDay(n); setMapPlace(place); setDay(null); setView("map"); }, returnDayThree = () => { setView("trip"); setDay(3); }, shellStyle = qaWidth ? { width: `${qaWidth}px` } : undefined, shellClass = qaWidth ? "qa-mobile" : ""; if (day) return <AppShell className={shellClass} style={shellStyle}><DayWorkspace dayNumber={day} close={() => { setDay(null); setView("trip"); }} goMap={goMap} goPack={goPack} goInspire={() => { setDay(null); setView("inspire"); }} /></AppShell>; return <AppShell className={shellClass} style={shellStyle}>{view === "home" && <Home openDay={setDay} goPack={goPack} goMap={goMap} />}{view === "trip" && <TripPrototype openDay={setDay} goHome={() => change("home")} />}{view === "map" && <RealMap selectedDay={mapDay} selectedPlaceId={mapPlace} selectDay={n => { setMapDay(n); setMapPlace(undefined); }} openDay={setDay} />}{view === "inspire" && <Inspire back={returnDayThree} />}{view === "pack" && <Pack back={returnDayThree} />}<JournalBottomNav active={view} change={change} share={shareSite} /></AppShell>; }
+export function Site() { const [view, setView] = useState<View>("home"), [day, setDay] = useState<number | null>(3), [mapDay, setMapDay] = useState(3), [mapPlace, setMapPlace] = useState<string | undefined>(), [qaWidth, setQaWidth] = useState<number | null>(null); useEffect(() => { validateMediaLibrary(); const query = new URLSearchParams(location.search), requestedWidth = Number(query.get("viewport")); setQaWidth([375, 390, 393, 430].includes(requestedWidth) ? requestedWidth : null); if (query.get("proof") === "trip") { setDay(null); setView("trip"); } else if (query.get("home") === "1") { setDay(null); setView("home"); } else if (query.get("detail") === "pack") { setDay(null); setView("pack"); } else if (query.get("detail") === "style") { setDay(null); setView("inspire"); } else if (query.get("day")) { const requestedDay = Number(query.get("day")); if (requestedDay >= 1 && requestedDay <= 7) setDay(requestedDay); } if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {}); }, []); useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }); }, [view, day]); const change = (v: View) => { setDay(null); setView(v); }, goPack = (_l: PackLayer) => { setDay(null); setView("pack"); }, goMap = (n: number, place?: string) => { setMapDay(n); setMapPlace(place); setDay(null); setView("map"); }, returnDayThree = () => { setView("home"); setDay(3); }, shellStyle = qaWidth ? { width: `${qaWidth}px` } : undefined, shellClass = qaWidth ? "qa-mobile" : ""; if (day) return <AppShell className={shellClass} style={shellStyle}><DayWorkspace dayNumber={day} close={() => { setDay(null); setView("trip"); }} goMap={goMap} goPack={goPack} goInspire={() => { setDay(null); setView("inspire"); }} /></AppShell>; return <AppShell className={shellClass} style={shellStyle}>{view === "home" && <Home openDay={setDay} goPack={goPack} goMap={goMap} />}{view === "trip" && <TripPrototype openDay={setDay} goHome={() => change("home")} />}{view === "map" && <RealMap selectedDay={mapDay} selectedPlaceId={mapPlace} selectDay={n => { setMapDay(n); setMapPlace(undefined); }} openDay={setDay} />}{view === "inspire" && <Inspire back={returnDayThree} />}{view === "pack" && <Pack back={returnDayThree} />}{!(["trip", "inspire", "pack"] as View[]).includes(view) && <BottomNav view={view} change={change} />}</AppShell>; }
