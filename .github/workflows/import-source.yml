@@ -1,0 +1,27 @@
+name: One-time source import
+
+on:
+  push:
+    paths:
+      - source-mirror.zip
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand verified source archive
+        run: |
+          unzip -o source-mirror.zip
+          rm source-mirror.zip
+          rm -f .github/workflows/import-source.yml
+      - name: Commit source and remove importer
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Mirror THE XINJIANG EDIT source"
+          git push
