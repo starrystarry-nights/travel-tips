@@ -1,5 +1,5 @@
-const CACHE = "xinjiang-edit-v5-day03-restored";
-const SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
+const CACHE = "xinjiang-edit-v6-full-journal";
+const SHELL = ["/", "/manifest.webmanifest", "/favicon.svg", "/app-icon.svg", "/og.png"];
 self.addEventListener("install", event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL))); });
 self.addEventListener("activate", event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener("fetch", event => {
