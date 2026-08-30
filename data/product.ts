@@ -92,7 +92,7 @@ export const days: TripDay[] = [
   ]},
   { day: 3, date: "09.14", iso: "2026-09-14", route: ["阿勒泰", "阿禾公路", "禾木"], drive: "约 5 小时", distance: "约 220 km", sleep: "禾木", effort: "中等", hero: "ahe-road-01", summary: "路线可能因道路或天气调整。", placeIds: ["altay", "ahe", "hemu"], stages: [
     { id: "d3-before", kind: "depart", title: "离开阿勒泰前", meta: "08:00 左右", facts: ["早餐、洗手间、水、充电。", "确认阿禾公路开放状态；关闭时可能改走国道。"], taskIds: ["ahe-road", "day3-weather"], packLayer: "day" },
-    { id: "d3-ahe", kind: "travel", title: "阿禾公路", meta: "原野 → 森林 → 草原 → 山地", placeId: "ahe", facts: ["乌希里克原野、通巴原始森林、托勒海特草原位于沿途景观序列。", "约 5 小时车程，下车与停留点服从道路和团队安排。"] },
+    { id: "d3-ahe", kind: "travel", title: "阿禾公路", meta: "原野 · 森林 · 草原 · 山地", placeId: "ahe", facts: ["乌希里克原野、通巴原始森林、托勒海特草原位于沿途景观序列。", "约 5 小时车程，下车与停留点服从道路和团队安排。"] },
     { id: "d3-approach", kind: "prepare", title: "进入禾木前", meta: "重要", facts: ["大件行李可能暂时不方便拿取。", "提前拿出今晚与明早的衣物、洗漱用品、充电和常用药。"] },
     { id: "d3-arrive", kind: "arrival", title: "抵达禾木", placeId: "hemu", facts: ["先吃饭、入住、整理随身物品。", "旅拍、小鹿、民俗馆和篝火按实际开放与体力选择。"], taskIds: ["hemu-activity"] },
     { id: "d3-evening", kind: "evening", title: "晚上", facts: ["温度下降后把外层穿回。", "给设备充电，准备明早衣物。"] },

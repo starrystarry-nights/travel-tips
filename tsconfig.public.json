@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": [
+    "standalone/**/*.tsx",
+    "app/site.tsx",
+    "data/**/*.ts",
+    "vite.public.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist-public",
+    "worker",
+    "db",
+    "examples"
+  ]
+}

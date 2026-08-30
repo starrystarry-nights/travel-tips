@@ -12,7 +12,10 @@
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
+    "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate",
+    "build:public": "vite build --config vite.public.config.ts && node scripts/build-offline.mjs",
+    "test:offline": "node --test tests/offline.test.mjs",
+    "check:public": "tsc --noEmit -p tsconfig.public.json"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

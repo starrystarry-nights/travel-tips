@@ -1,3 +1,7 @@
+# Public installable PWA
+
+For the anonymous GitHub Pages version, offline package, installation and publishing instructions, see [PUBLIC-PWA.md](PUBLIC-PWA.md). Run `npm run build:public` to generate `dist-public/`.
+
 # vinext-starter
 
 A clean full-stack starter running on
