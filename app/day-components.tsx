@@ -190,7 +190,12 @@ export function OutfitPreview({
 }) {
   return (
     <button className="journal-outfit-preview" onClick={open}>
-      <LandscapePhotoBlock source={visual.outfit} alt={visual.outfitAlt || "秋季旅行穿搭参考"} position={visual.outfitPosition} />
+      <figure className="journal-photo" aria-label="私人穿搭图库">
+        <span style={{ position: "absolute", inset: 0, display: "grid", placeContent: "center", textAlign: "center", padding: 24 }}>
+          <b>私人穿搭图库</b>
+          <small>图片仅保存在当前设备</small>
+        </span>
+      </figure>
       <span>
         <small>WHAT TO WEAR</small>
         <b>{visual.outfitCopy}</b>
