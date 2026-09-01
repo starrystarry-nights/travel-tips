@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   icons: {
     icon: `${basePath}/favicon.svg`,
     shortcut: `${basePath}/favicon.svg`,
-    apple: `${basePath}/icons/app-icon.jpg`,
+    apple: `${basePath}/icons/apple-touch-icon.png`,
   },
   manifest: `${basePath}/manifest.webmanifest`,
 };
