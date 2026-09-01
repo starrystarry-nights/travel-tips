@@ -96,8 +96,9 @@ export function OfflineTools() {
     }).catch(() => {});
   }, []);
 
+  if (githubPages) return null;
+
   async function download() {
-    if (githubPages) { setMessage("GitHub 公开版暂不启用离线缓存，以保证图片和地图始终加载最新版本。"); return; }
     setBusy(true); setMessage("");
     try {
       const result = await askWorker("DOWNLOAD", setStatus); setStatus(result);
@@ -116,13 +117,13 @@ export function OfflineTools() {
   }
 
   return <section className="offline-tools" aria-label="离线与分享">
-    <div><small>TAKE IT WITH YOU</small><b>{githubPages ? "公开版在线更新" : status?.complete ? "已准备好离线使用" : "把旅行指南带在手机里"}</b></div>
+    <div><small>TAKE IT WITH YOU</small><b>{status?.complete ? "已准备好离线使用" : "把旅行指南带在手机里"}</b></div>
     <div className="offline-actions">
-      <button onClick={download} disabled={busy}>{githubPages ? "在线模式" : busy ? `下载中 ${status?.done || 0}/${status?.total || "…"}` : status?.complete ? "检查离线包" : "下载离线包"}<ArrowIcon direction="up" /></button>
+      <button onClick={download} disabled={busy}>{busy ? `下载中 ${status?.done || 0}/${status?.total || "…"}` : status?.complete ? "检查离线包" : "下载离线包"}<ArrowIcon direction="up" /></button>
       <button onClick={install}>添加到主屏幕<ArrowIcon direction="up" /></button>
       <button onClick={copy}>复制链接<ArrowIcon /></button>
     </div>
-    <p>{githubPages ? "GitHub 公开版优先保证图片、地图和页面更新正常；个人记录仍只保存在本机。" : "首次使用请联网下载。个人记录只存本机；更换网址后，原网址的数据不会自动迁移。"}</p>
+    <p>首次使用请联网下载。个人记录只存本机；更换网址后，原网址的数据不会自动迁移。</p>
     <OfflineNotice />
     {message && <p role="status">{message}</p>}
     {update && <button onClick={() => { navigator.serviceWorker.addEventListener("controllerchange", () => location.reload(), { once: true }); update.waiting?.postMessage({ type: "ACTIVATE" }); }}>新版本已就绪，刷新更新<ArrowIcon /></button>}
