@@ -27,11 +27,12 @@ export const dayVisuals: Record<number, DayVisual> = {
   1: {
     hero: "/editorial/urumqi-nature-02.jpg",
     secondary: "/editorial/urumqi-nature-01.jpg",
-    outfit: "https://cdn.hstatic.net/200000503583/file/di-le-giang-mac-gi-cardina-9.jpg_3af0788496e948048f4d4e30fd08109f.jpg",
-    outfitAlt: "年轻女生山野旅行叠穿，橄榄色长外套、白色针织与宽松牛仔长裤，搭配红色小围巾",
+    // Pexels License · https://www.pexels.com/photo/young-woman-smiling-outdoors-in-nature-setting-30267970/
+    outfit: "https://images.pexels.com/photos/30267970/pexels-photo-30267970.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    outfitAlt: "年轻女生秋季户外穿搭，轻外套搭配长下装",
     outfitPosition: "center center",
     altitude: "约 800 m",
-    outfitCopy: "长外套 + 薄针织 + 宽松牛仔裤 + 小围巾",
+    outfitCopy: "轻外套 + 长下装",
     outfitNote: "抵达时间不确定，外层方便应对机场、室内和夜间温差。",
     outfitSecondaryCopy: "",
     reminders: ["确认住宿地址与入住时间", "确认 Day 02 集合时间与地点", "手机、充电宝与相机睡前充满"],
@@ -44,11 +45,12 @@ export const dayVisuals: Record<number, DayVisual> = {
   2: {
     hero: "/editorial/day02-hero.jpg",
     secondary: "/editorial/day02-secondary.jpg",
-    outfit: "https://megapx-assets.dcard.tw/images/a2986f4a-a7bf-459c-9710-c8e2a0f0392c/1280.jpeg",
-    outfitAlt: "年轻女生山间旅行穿搭，米白针织叠牛仔衬衫、浅色宽松工装裤和帽子",
+    // Pexels License · https://www.pexels.com/photo/casual-outdoor-portrait-of-woman-in-autumn-light-34708233/
+    outfit: "https://images.pexels.com/photos/34708233/pexels-photo-34708233.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    outfitAlt: "年轻女生秋季日常穿搭，轻外套与宽松牛仔长裤",
     outfitPosition: "center center",
     altitude: "约 700—1,100 m",
-    outfitCopy: "针织上衣 + 衬衫叠穿 + 宽松工装长裤",
+    outfitCopy: "轻外套 + 宽松牛仔长裤",
     outfitNote: "约 8 小时坐车，下装不要勒腰；停车时再加防风层。",
     outfitSecondaryCopy: "",
     reminders: ["早餐后先处理洗手间并装满水", "晕车药提前服用，车上少低头", "停车只服从司机与道路安全安排"],
@@ -63,11 +65,12 @@ export const dayVisuals: Record<number, DayVisual> = {
   3: {
     hero: "/editorial/day03-hero.jpg",
     secondary: "/editorial/day03-secondary.jpg",
-    outfit: "https://ak-d.tripcdn.com/images/1mi2z12000nqrf7pk03CA.webp?proc=source%2Ftrip",
-    outfitAlt: "年轻女生草原旅行叠穿，橙色保暖外层、米色针织、酒红围巾和宽松橄榄长裤",
+    // Pexels License · https://www.pexels.com/photo/woman-in-jacket-and-scarf-on-field-20650446/
+    outfit: "https://images.pexels.com/photos/20650446/pexels-photo-20650446.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    outfitAlt: "年轻女生山野秋季穿搭，柔软外层、围巾与长裤",
     outfitPosition: "center center",
     altitude: "禾木约 1,200 m",
-    outfitCopy: "保暖外层 + 针织 + 长围巾 + 宽松长裤",
+    outfitCopy: "柔软外层 + 围巾 + 长裤",
     outfitNote: "早上穿完整，中午热时脱外层；进入禾木前把外套留在身边。",
     outfitSecondaryCopy: "",
     reminders: ["出发前确认阿禾公路开放状态", "保暖外层、常用药与充电宝留在随身包", "进入禾木前拿出今晚和明早用品"],
@@ -84,11 +87,12 @@ export const dayVisuals: Record<number, DayVisual> = {
   4: {
     hero: "/editorial/day04-hero.jpg",
     secondary: "/editorial/day04-secondary.jpg",
-    outfit: "https://cds.chinadaily.com.cn/dams/capital/image/202110/13/61669f50e4b0f33f152b5287.jpg",
-    outfitAlt: "年轻女生山野叠穿，白色粗针织外层叠牛仔夹克与白色长袖，下搭黑色长裤",
+    // Pexels License · https://www.pexels.com/photo/young-woman-with-scarf-in-autumn-forest-28867634/
+    outfit: "https://images.pexels.com/photos/28867634/pexels-photo-28867634.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    outfitAlt: "年轻女生秋季森林穿搭，浅色外套与围巾叠穿",
     outfitPosition: "center center",
     altitude: "约 1,300—2,000 m",
-    outfitCopy: "粗针织 + 牛仔夹克 + 长袖 + 黑色长裤",
+    outfitCopy: "浅色外套 + 围巾 + 长下装",
     outfitNote: "湖边和白哈巴风更明显；观鱼台台阶多，鞋底防滑优先。",
     outfitSecondaryCopy: "",
     reminders: ["身份证全程随身", "确认观鱼台预约、限流与区间车顺序", "湖边和白哈巴降温时及时加防风层"],
@@ -103,11 +107,12 @@ export const dayVisuals: Record<number, DayVisual> = {
   5: {
     hero: "/editorial/day05-hero.jpg",
     secondary: "/editorial/day05-secondary.jpg",
-    outfit: "https://ak-d.tripcdn.com/images/1mi62224x90pa8tgb765F.jpg?proc=source%2Ftrip",
-    outfitAlt: "年轻女生秋季山谷穿搭，白色抓绒外套、米色帽子与焦糖色长下装",
+    // Pexels License · https://www.pexels.com/photo/woman-in-a-coat-sunglasses-and-a-cap-sitting-on-autumn-leaves-18879347/
+    outfit: "https://images.pexels.com/photos/18879347/pexels-photo-18879347.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    outfitAlt: "年轻女生秋季旅行穿搭，浅色外套、棒球帽与墨镜",
     outfitPosition: "center center",
     altitude: "约 1,300 m",
-    outfitCopy: "白色抓绒 + 毛线帽 + 长下装",
+    outfitCopy: "浅色外套 + 棒球帽 + 长下装",
     outfitNote: "晨间可能更冷，离开景区后是约 7 小时车程。",
     outfitSecondaryCopy: "",
     reminders: ["晨间出门前补齐保暖层", "离开景区前处理洗手间、水和零食", "长车程前确认充电宝电量"],
@@ -122,12 +127,13 @@ export const dayVisuals: Record<number, DayVisual> = {
   6: {
     hero: "/editorial/day06-hero.jpg",
     secondary: "/editorial/day06-secondary.jpg",
-    outfit: "https://res.klook.com/images/fl_lossy.progressive%2Cq_65/c_crop%2Cx_0%2Cy_708%2Ch_708%2Cw_1000/activities/g4og343olbwyuldvyice/FotografiSpektakulerXinjiang%7CWisataFotografiMusimGugurTerbaikXinjiangUtara8Hari%28GrupKecilEksklusif2-6Orang%C2%B7Kanas%C2%B7Hemu%C2%B7DanauSayram%29.jpg",
-    outfitAlt: "北疆秋季旅行穿搭，蓝色图案针织、姜黄色长裙和贝雷帽，色彩与秋景形成层次",
+    // Pexels License · https://www.pexels.com/photo/woman-wearing-denim-jacket-walking-on-green-grass-field-4636209/
+    outfit: "https://images.pexels.com/photos/4636209/pexels-photo-4636209.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    outfitAlt: "年轻女生山野旅行穿搭，牛仔外套、帽子与轻便长下装",
     outfitPosition: "center center",
     altitude: "约 300—500 m",
-    outfitCopy: "图案针织 + 长裙 + 贝雷帽",
-    outfitNote: "魔鬼城风、晒和干燥明显；裙装当天务必叠打底并备防风外层。",
+    outfitCopy: "轻外套 + 帽子 + 长下装",
+    outfitNote: "魔鬼城风、晒和干燥明显；帽子与围巾要能固定。",
     outfitSecondaryCopy: "",
     reminders: ["确认胡杨林当天是否进入行程", "魔鬼城补防晒并固定帽子、围巾", "返程前补水、洗手间与充电"],
     dayBag: [
@@ -141,11 +147,12 @@ export const dayVisuals: Record<number, DayVisual> = {
   7: {
     hero: "/editorial/urumqi-nature-04.jpg",
     secondary: "/editorial/urumqi-nature-03.jpg",
-    outfit: "https://cdn02.pinkoi.com/wp-content/uploads/sites/7/2023/11/11014759/image2.webp",
-    outfitAlt: "年轻女生日常秋季叠穿，浅色针织背心、白色长袖衬衫和粉色毛线帽",
+    // Pexels License · https://www.pexels.com/photo/woman-in-a-fashionable-autumnal-outfit-14577049/
+    outfit: "https://images.pexels.com/photos/14577049/pexels-photo-14577049.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    outfitAlt: "年轻女生秋季城市穿搭，轻外套、帽子与长下装",
     outfitPosition: "center center",
     altitude: "约 800 m",
-    outfitCopy: "针织背心 + 长袖衬衫 + 毛线帽",
+    outfitCopy: "轻外套 + 帽子 + 长下装",
     outfitNote: "返程以舒适为主，仍保留一层轻外套应对室内外温差。",
     outfitSecondaryCopy: "",
     reminders: ["核对返程交通时间并预留缓冲", "检查证件、充电线、药品与房间遗留物", "确认托运行李中没有充电宝"],
