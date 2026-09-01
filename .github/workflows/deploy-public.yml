@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build app icon
+        run: base64 --decode public/icons/app-icon.b64 > public/icons/app-icon.jpg
+
       - name: Build static site
         run: npx next build --webpack
 
