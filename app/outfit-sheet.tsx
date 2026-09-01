@@ -1,11 +1,11 @@
 "use client";
-import { assetUrl } from "./assets";
 import { useEffect, useMemo, useState } from "react";
 import type { DayVisual } from "@/data/experience";
 import { days, places } from "@/data/product";
 import { ArrowIcon } from "./day-components";
 
 type OutfitWeather = { min: number; max: number; wind: number };
+type PrivateImage = { id: string; day: number; kind: "style"; src: string; caption?: string };
 
 function guidanceFor(day: number, visual: DayVisual, weather: OutfitWeather | null) {
   if (!weather) {
@@ -63,13 +63,83 @@ function guidanceFor(day: number, visual: DayVisual, weather: OutfitWeather | nu
   };
 }
 
-/** One rendering path for all seven days. Outfit guidance follows the day's forecast when available. */
+function openImageDb() {
+  return new Promise<IDBDatabase>((resolve, reject) => {
+    const request = indexedDB.open("xe-personal-images", 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("images")) db.createObjectStore("images", { keyPath: "id" });
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function imageFileToDataUrl(file: File) {
+  const raw = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+  const image = document.createElement("img");
+  image.src = raw;
+  await image.decode();
+  const scale = Math.min(1, 1800 / Math.max(image.naturalWidth, image.naturalHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(image.naturalWidth * scale);
+  canvas.height = Math.round(image.naturalHeight * scale);
+  canvas.getContext("2d")!.drawImage(image, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.86);
+}
+
+function usePrivateOutfitImages(day: number) {
+  const [items, setItems] = useState<PrivateImage[]>([]);
+  const [busy, setBusy] = useState(false);
+  const refresh = async () => {
+    const db = await openImageDb();
+    const request = db.transaction("images", "readonly").objectStore("images").getAll();
+    request.onsuccess = () => setItems((request.result as PrivateImage[]).filter(item => item.day === day && item.kind === "style"));
+  };
+  useEffect(() => { refresh().catch(() => {}); }, [day]);
+  const addFiles = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setBusy(true);
+    try {
+      const db = await openImageDb();
+      for (const file of Array.from(files)) {
+        const item: PrivateImage = { id: crypto.randomUUID(), day, kind: "style", src: await imageFileToDataUrl(file), caption: "" };
+        await new Promise<void>((resolve, reject) => {
+          const request = db.transaction("images", "readwrite").objectStore("images").put(item);
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+      }
+      await refresh();
+    } finally { setBusy(false); }
+  };
+  const clear = async () => {
+    const db = await openImageDb();
+    for (const item of items) {
+      await new Promise<void>((resolve, reject) => {
+        const request = db.transaction("images", "readwrite").objectStore("images").delete(item.id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+    await refresh();
+  };
+  return { items, busy, addFiles, clear };
+}
+
+/** Outfit guidance follows weather; outfit photos are private and stay on this device only. */
 export function OutfitSheetContent({ day, visual, openInspiration }: {
   day: number;
   visual: DayVisual;
   openInspiration: () => void;
 }) {
   const [weather, setWeather] = useState<OutfitWeather | null>(null);
+  const { items, busy, addFiles, clear } = usePrivateOutfitImages(day);
 
   useEffect(() => {
     const tripDay = days[day - 1];
@@ -89,27 +159,28 @@ export function OutfitSheetContent({ day, visual, openInspiration }: {
   }, [day]);
 
   const guidance = useMemo(() => guidanceFor(day, visual, weather), [day, visual, weather]);
-  const photos = [{
-    src: visual.outfit,
-    alt: visual.outfitAlt ?? "秋季旅行穿搭参考",
-    caption: guidance.caption,
-    position: visual.outfitPosition,
-  }, ...(visual.outfitSecondary ? [{
-    src: visual.outfitSecondary,
-    alt: "秋季旅行叠穿参考",
-    caption: visual.outfitSecondaryCopy,
-    position: undefined,
-  }] : [])];
 
   return <>
-    <div className="day3-wear-track" data-count={photos.length} key={day}
-      aria-label={`Day ${String(day).padStart(2, "0")} 穿搭参考`}>
-      {photos.map(photo => <figure key={photo.src}>
-        <img src={assetUrl(photo.src)} alt={photo.alt} loading="lazy" decoding="async"
-          style={{ objectPosition: photo.position }} />
-        <figcaption>{photo.caption}</figcaption>
-      </figure>)}
-    </div>
+    {items.length ? (
+      <div className="day3-wear-track" data-count={items.length} key={day} aria-label={`Day ${String(day).padStart(2, "0")} 私人穿搭参考`}>
+        {items.map((photo, index) => <figure key={photo.id}>
+          <img src={photo.src} alt="我的私人穿搭参考" loading="lazy" decoding="async" />
+          <figcaption>{index === 0 ? guidance.caption : "私人穿搭参考 · 仅保存在当前设备"}</figcaption>
+        </figure>)}
+      </div>
+    ) : (
+      <div className="personal-empty">
+        <b>添加你的穿搭参考</b>
+        <p>不再显示公开图库照片。你添加的图片只保存在当前设备，不会上传到 GitHub，也不会随分享链接公开。</p>
+      </div>
+    )}
+
+    <label className="day3-sheet-link" style={{ display: "flex", cursor: "pointer" }}>
+      {busy ? "正在处理图片…" : items.length ? "继续添加私人图片" : "添加私人穿搭图"} <ArrowIcon />
+      <input type="file" accept="image/*" multiple disabled={busy} style={{ display: "none" }} onChange={event => { addFiles(event.target.files); event.currentTarget.value = ""; }} />
+    </label>
+    {items.length > 0 && <button className="day3-sheet-link" onClick={clear}>清空本日私人图片 <ArrowIcon /></button>}
+
     <div className="day3-comfort-line">
       {guidance.moments.map(([time, instruction]) => <span key={time}>
         <small>{time}</small>{instruction}
