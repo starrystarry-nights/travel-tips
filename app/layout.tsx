@@ -3,6 +3,7 @@ import "./globals.css";
 import "./mobile-overrides.css";
 
 const basePath = process.env.GITHUB_ACTIONS === "true" ? "/travel-tips" : "";
+const appIcon = `${basePath}/icons/app-icon.png`;
 
 export const metadata: Metadata = {
   title: "THE XINJIANG EDIT｜北疆秋日旅行指南",
@@ -19,9 +20,9 @@ export const metadata: Metadata = {
     images: [`${basePath}/og.png`],
   },
   icons: {
-    icon: `${basePath}/favicon.svg`,
-    shortcut: `${basePath}/favicon.svg`,
-    apple: `${basePath}/icons/apple-touch-icon.png`,
+    icon: appIcon,
+    shortcut: appIcon,
+    apple: appIcon,
   },
   manifest: `${basePath}/manifest.webmanifest`,
 };
@@ -37,6 +38,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#edf1ed" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <link rel="apple-touch-icon" sizes="180x180" href={appIcon} />
       </head>
       <body className="antialiased">{children}</body>
     </html>
