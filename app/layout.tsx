@@ -3,7 +3,7 @@ import "./globals.css";
 import "./mobile-overrides.css";
 
 const basePath = process.env.GITHUB_ACTIONS === "true" ? "/travel-tips" : "";
-const appIcon = `${basePath}/icons/app-icon.png`;
+const appIcon = `${basePath}/icons/apple-touch-icon.png`;
 
 export const metadata: Metadata = {
   title: "THE XINJIANG EDIT｜北疆秋日旅行指南",
