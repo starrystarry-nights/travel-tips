@@ -1,6 +1,8 @@
 /** Resolve the application base for both ChatGPT Sites and GitHub Pages. */
 export function appBase() {
-  if (typeof window === "undefined") return "/";
+  if (typeof window === "undefined") {
+    return process.env.GITHUB_ACTIONS === "true" ? "/travel-tips/" : "/";
+  }
 
   const explicitBase = document.querySelector("base")?.getAttribute("href");
   if (explicitBase && explicitBase !== "/") return explicitBase.endsWith("/") ? explicitBase : `${explicitBase}/`;
