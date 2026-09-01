@@ -2,26 +2,28 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./mobile-overrides.css";
 
+const basePath = process.env.GITHUB_ACTIONS === "true" ? "/travel-tips" : "";
+
 export const metadata: Metadata = {
   title: "THE XINJIANG EDIT｜北疆秋日旅行指南",
   description: "一份关于北疆秋日路线、穿搭、摄影与旅行舒适度的中文指南。",
   openGraph: {
     title: "THE XINJIANG EDIT",
     description: "北疆秋日旅行指南 · STYLE · PLACES · NOTES",
-    images: [{ url: "/og.png", width: 1200, height: 630 }],
+    images: [{ url: `${basePath}/og.png`, width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "THE XINJIANG EDIT",
     description: "北疆秋日旅行指南 · STYLE · PLACES · NOTES",
-    images: ["/og.png"],
+    images: [`${basePath}/og.png`],
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/icons/app-icon.jpg",
+    icon: `${basePath}/favicon.svg`,
+    shortcut: `${basePath}/favicon.svg`,
+    apple: `${basePath}/icons/app-icon.jpg`,
   },
-  manifest: "/manifest.webmanifest",
+  manifest: `${basePath}/manifest.webmanifest`,
 };
 
 export default function RootLayout({
