@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Build app icon
-        run: base64 --decode public/icons/app-icon.b64 > public/icons/app-icon.jpg
+        run: base64 --decode public/icons/app-icon.b64 > public/icons/app-icon.png
 
       - name: Build static site
         run: npx next build --webpack
